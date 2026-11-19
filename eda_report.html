@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.14" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CSE 163
+EDA – Electrification and Equity: Income, Secondary Markets, and Policy Thresholds in Washington State EV Adoption</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    em, em em em, em em em em em {
+      font-style: italic;
+    }
+    em em, em em em em {
+      font-style: normal;
+    }
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    @media print {
+      html {
+        color-scheme: light only;
+      }
+      html, body, pre, code {
+        background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
+        color: black;
+      }
+      pre, code {
+        padding: 0;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }  </style>
+  <link rel="stylesheet" href="style_eda.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Electrification and Equity: Income, Secondary Markets,
+and Policy Thresholds in Washington State EV Adoption</h1>
+<p class="subtitle">CSE 163 Final Project — Part 2: Exploratory Data
+Analysis</p>
+</header>
+<p><strong>Author:</strong> David Gao <strong>Course:</strong> CSE 163,
+Autumn 2026</p>
+<p><strong>GitHub repository:</strong> <a
+href="https://github.com/David-Gao-uw/ev-equity-project"
+class="uri">https://github.com/David-Gao-uw/ev-equity-project</a></p>
+<h2 id="summary-of-research-questions">1. Summary of Research
+Questions</h2>
+<ol type="1">
+<li>Across Washington ZIP codes, is EV ownership per 1,000 tax returns
+monotonically associated with average adjusted gross income (AGI) per
+return, and how large is the gradient across income quartiles?</li>
+<li>Do Washington ZIP codes differ in the <strong>powertrain</strong>
+mix of their EVs — the battery-electric (BEV) share — across income
+quartiles? <em>(Revised during EDA; see §5.)</em></li>
+<li>How is annual growth in new EV registrations distributed across
+Washington’s 39 counties from 2010 to 2025, and does King County’s share
+of statewide registrations decline over time?</li>
+<li>Among used EV sales with a positive recorded price, how does sale
+price vary with rated electric range, and does that slope differ
+significantly above versus below the 30-mile range threshold set by 2019
+HB 2042?</li>
+</ol>
+<h2 id="motivation">2. Motivation</h2>
+<p>Washington forgoes revenue each year through EV tax exemptions, and a
+tax expenditure is a distributive choice: it matters who receives it.
+Those exemptions are capped by vehicle price, which mechanically steers
+the benefit toward buyers of higher-priced cars, and the practical
+prerequisites for owning an EV — charging access, home ownership — are
+themselves unevenly distributed. Whether the subsidy is therefore
+regressive is an empirical question answerable from registration and
+income records alone. The EDA below establishes the size of that
+gradient before any modelling, and it tests whether the “subsidy for the
+rich” story is as simple as it sounds.</p>
+<h2 id="datasets">3. Datasets</h2>
+<p>All three are public, download as direct CSV links, and require no
+login or key. File sizes and row counts below are what this analysis
+actually downloaded on 18 November 2026; the transaction file has grown
+substantially since the proposal, which is noted in §8.</p>
+<p><strong>D1 — WA Dept. of Licensing, Electric Vehicle Population
+Data.</strong> One row per currently registered EV. 304,258 rows; 16
+columns in the file, of which this EDA uses 10. <a
+href="https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD"
+class="uri">https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD</a></p>
+<p><strong>D2 — WA Dept. of Licensing, EV Title and Registration
+Activity.</strong> One row per title or registration event. 1,964,093
+rows; 33 columns, of which this EDA uses 13. <a
+href="https://data.wa.gov/api/views/rpr4-cgyd/rows.csv?accessType=DOWNLOAD"
+class="uri">https://data.wa.gov/api/views/rpr4-cgyd/rows.csv?accessType=DOWNLOAD</a></p>
+<p><strong>D3 — IRS Statistics of Income, ZIP Code Data
+(TY2022).</strong> One row per ZIP and AGI bracket; 2,994 Washington
+rows across 165 columns, collapsed here to 499 ZIP codes with at least
+100 tax returns. <a
+href="https://www.irs.gov/pub/irs-soi/22zpallagi.csv"
+class="uri">https://www.irs.gov/pub/irs-soi/22zpallagi.csv</a></p>
+<h2 id="method">4. Method</h2>
+<p>The EDA proceeded in four passes, all implemented in
+<code>src/data.py</code> and <code>src/eda_report.py</code>. First,
+every file was loaded with explicit <code>usecols</code> and with
+<code>Postal Code</code> typed as text so that leading zeros survive;
+ZIP codes were normalised to five digits and anything that was not a
+real ZIP became <code>NA</code> so joins could not match on a fake code.
+Second, missingness was quantified per column with
+<code>DataFrame.isna()</code>. Third, each dataset was profiled
+separately: seven-number summaries for quantitative variables, value
+counts for categorical ones, and two or more plots each. Fourth, each of
+the three intended joins was built and profiled on its own terms —
+coverage, distributions after the join, and the two plots required per
+combination — and the assumptions behind the planned statistical tests
+were checked explicitly rather than asserted.</p>
+<h2 id="changes-made-during-the-eda">5. Changes Made During the EDA</h2>
+<p>One research question was revised because the data contradicted its
+premise. RQ2 originally asked whether used EVs reach lower-income ZIPs
+than new ones. The EDA shows that <strong>84% of all registration events
+in D2 are used-vehicle transfers</strong> and that the used share is
+essentially flat across income quartiles (§6.5), so the new/used split
+cannot discriminate between income groups. RQ2 therefore now compares
+the <strong>BEV versus PHEV composition</strong> across income
+quartiles, which the joined data does support (§6.4). The proposal’s
+challenge goals are unaffected.</p>
+<h2 id="eda-results">6. EDA Results</h2>
+<h3 id="d1-registered-ev-population">6.1 D1 — Registered EV
+population</h3>
+<p>The analysed frame has 304,258 rows and 10 columns; each row is one
+currently registered electric vehicle, and the columns describe where it
+is registered, what it is, and how far it can go. Missingness is
+negligible: <code>df.isna().sum().sum()</code> returns <strong>137
+missing cells out of 3,042,580 (0.005%)</strong>, confined to 31 rows
+lacking
+<code>County</code>/<code>Postal Code</code>/<code>2020 GEOID</code> and
+13 rows lacking <code>Electric Range</code>. Because the affected rows
+also fail the ZIP normalisation, they drop out of every ZIP-level join
+and need no imputation.</p>
+<p>The variables of interest are <code>Electric Vehicle Type</code> (BEV
+vs PHEV — the numerator of RQ2), <code>Electric Range</code> (RQ4’s
+threshold variable), <code>DOL Vehicle ID</code> (the join key to D2),
+<code>Postal Code</code> (the join key to D3), and
+<code>Model Year</code> (adoption timing). Seven-number summaries and
+value counts are in Table 1.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>mean</th>
+<th>std</th>
+<th>min</th>
+<th>Q1</th>
+<th>median</th>
+<th>Q3</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Electric Range</code></td>
+<td>35.61</td>
+<td>74.90</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>32</td>
+<td>337</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Categorical variable</th>
+<th>values with counts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Electric Vehicle Type</code></td>
+<td>BEV 245,361 · PHEV 58,897</td>
+</tr>
+</tbody>
+</table>
+<p>Table 1. Summary of D1 variables of interest (n = 304,245 for
+range).</p>
+<p><code>Electric Range</code> has a median of <strong>0</strong>, which
+is not a typo: many rows record zero because the battery range was never
+researched, a pattern that repeats in D2 and directly affects RQ4
+(§6.6).</p>
+<figure>
+<img src="figures/fig1_ev_by_model_year.png"
+alt="Figure 1. Registered EVs by model year." />
+<figcaption aria-hidden="true">Figure 1. Registered EVs by model
+year.</figcaption>
+</figure>
+<p>Figure 1 plots <code>Model Year</code> against the number of
+registered vehicles. A bar chart is the right choice because model year
+is discrete and the interesting signal is the change in volume across
+years: registrations rise sharply after 2017, peak in the most recent
+complete model years, and taper off for older vehicles that have left
+the fleet. A reader should take away that the Washington fleet is young
+— most EVs on the road were built in the last seven years.</p>
+<figure>
+<img src="figures/fig2_ev_range_by_type.png"
+alt="Figure 2. Electric range by powertrain type." />
+<figcaption aria-hidden="true">Figure 2. Electric range by powertrain
+type.</figcaption>
+</figure>
+<p>Figure 2 overlays histograms of <code>Electric Range</code> for BEVs
+and PHEVs. Overlaying rather than stacking makes the two distributions
+directly comparable; the PHEV mass sits at low range values (they carry
+a combustion engine) while BEVs spread widely toward 300+ miles. The
+visible spike at zero corresponds to the un-researched range values
+noted above and is why RQ4 cannot simply trust the pre-computed HB 2042
+flag.</p>
+<h3 id="d2-title-and-registration-activity">6.2 D2 — Title and
+registration activity</h3>
+<p>The analysed frame has 1,964,093 rows and 13 columns; each row is one
+title or registration event, so the same vehicle can appear many times.
+Missingness is again tiny — <strong>632 cells of 25,533,209
+(0.002%)</strong> — with
+<code>County</code>/<code>Postal Code</code>/<code>ZIP</code> missing in
+195 rows, <code>Electric Range</code> in 46, and <code>State</code> in
+one.</p>
+<p>Variables of interest: <code>New or Used Vehicle</code> (the original
+RQ2 split), <code>Sale Price</code> and <code>Electric Range</code>
+(RQ4), <code>Year</code>/<code>Transaction Type</code> (RQ3), and
+<code>DOL Vehicle ID</code> (join key to D1). Table 2 gives the
+summaries.</p>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr>
+<th>Variable</th>
+<th>mean</th>
+<th>std</th>
+<th>min</th>
+<th>Q1</th>
+<th>median</th>
+<th>Q3</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Sale Price</code> (used, price &gt; 0)</td>
+<td>30,223</td>
+<td>62,672</td>
+<td>1</td>
+<td>16,700</td>
+<td>25,995</td>
+<td>37,991</td>
+<td>12,312,016</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Categorical variable</th>
+<th>values with counts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>New or Used Vehicle</code></td>
+<td>Used 1,649,762 · New 314,331</td>
+</tr>
+</tbody>
+</table>
+<p>Table 2. Summary of D2 variables of interest (used-with-price n =
+150,300).</p>
+<p>Two facts here matter for later analysis. Only <strong>150,300 of
+1,649,762 used transactions (9.1%) record a positive
+<code>Sale Price</code></strong>, so RQ4 operates on a small, possibly
+non-random subset. And the maximum recorded price of <strong>$12.3
+million</strong> is not credible, so RQ4 needs an explicit outlier rule
+rather than a silent mean.</p>
+<figure>
+<img src="figures/fig3_transactions_by_year.png"
+alt="Figure 3. EV title and registration transactions by year." />
+<figcaption aria-hidden="true">Figure 3. EV title and registration
+transactions by year.</figcaption>
+</figure>
+<p>Figure 3 is a line plot of annual transaction counts, chosen because
+time is continuous here and the shape of growth matters more than exact
+levels. Volume rises steeply from 2011, peaks in 2025, and 2026 is
+visibly partial because the file ends mid-year — which is why RQ3
+excludes incomplete years.</p>
+<figure>
+<img src="figures/fig4_used_price_distribution.png"
+alt="Figure 4. Distribution of used EV sale prices." />
+<figcaption aria-hidden="true">Figure 4. Distribution of used EV sale
+prices.</figcaption>
+</figure>
+<p>Figure 4 histograms <code>Sale Price</code> for used EVs after
+trimming the top 1%. A histogram is appropriate for judging shape, and
+the shape is strongly right-skewed — a property that determines the
+choice of statistical test in §6.7.</p>
+<h3 id="d3-irs-zip-level-income">6.3 D3 — IRS ZIP-level income</h3>
+<p>The Washington subset has 2,994 rows and 33 columns, one row per ZIP
+and AGI bracket, with <strong>no missing cells at all</strong>
+(<code>isna().sum().sum() == 0</code>). Collapsing the brackets gives
+499 ZIP codes with at least 100 returns. Variables of interest are
+<code>N1</code> (number of returns, used as the denominator) and
+<code>A00100</code> (total AGI in thousands), which together define
+<code>AVG_AGI</code>, the RQ1 predictor.</p>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr>
+<th>Variable</th>
+<th>mean</th>
+<th>std</th>
+<th>min</th>
+<th>Q1</th>
+<th>median</th>
+<th>Q3</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RETURNS</code> per ZIP</td>
+<td>7,428</td>
+<td>7,973</td>
+<td>100</td>
+<td>800</td>
+<td>4,010</td>
+<td>12,790</td>
+<td>51,180</td>
+</tr>
+<tr>
+<td><code>AVG_AGI</code> (thousands USD)</td>
+<td>96.75</td>
+<td>68.52</td>
+<td>33.44</td>
+<td>67.31</td>
+<td>80.56</td>
+<td>103.48</td>
+<td>1,191.71</td>
+</tr>
+</tbody>
+</table>
+<p>Table 3. Summary of D3 variables after collapsing to one row per ZIP
+(n = 499).</p>
+<figure>
+<img src="figures/fig5_income_distribution.png"
+alt="Figure 5. Average income per return across WA ZIP codes." />
+<figcaption aria-hidden="true">Figure 5. Average income per return
+across WA ZIP codes.</figcaption>
+</figure>
+<p>Figure 5 histograms <code>AVG_AGI</code> across ZIP codes. The
+distribution has a long right tail (two ZIP codes exceed $600k average
+AGI) and justifies the return-weighted quartiles used in §6.4: an
+unweighted split would put a handful of tiny, very rich ZIPs into their
+own quartile.</p>
+<figure>
+<img src="figures/fig6_returns_vs_income.png"
+alt="Figure 6. ZIP size versus average income." />
+<figcaption aria-hidden="true">Figure 6. ZIP size versus average
+income.</figcaption>
+</figure>
+<p>Figure 6 scatters <code>RETURNS</code> (log scale) against
+<code>AVG_AGI</code>. The log x-axis is necessary because ZIP size spans
+three orders of magnitude. The plot shows that small ZIPs produce the
+extremes of average income on both ends, which is exactly why the
+100-return threshold exists.</p>
+<h3 id="join-d1-d3-the-income-gradient-rq1-rq2">6.4 Join D1 × D3 — the
+income gradient (RQ1, RQ2)</h3>
+<p>The two datasets are related through geography: D1 records a
+vehicle’s <code>Postal Code</code> and D3 reports income by
+<code>zipcode</code>, so the join is on ZIP after normalisation. This is
+a many-to-one join — many vehicles per ZIP — and the analysis therefore
+aggregates D1 to one row per ZIP before merging.</p>
+<p>Coverage needs careful reporting. D1 spans <strong>1,198 distinct ZIP
+codes</strong> while D3 keeps 499; the merge matches <strong>491 ZIP
+codes, or 41.0% of EV ZIPs</strong> — a number that looks alarming until
+it is measured by rows: <strong>99.5% of EV records carry a ZIP present
+in the income profile</strong>. The unmatched ZIPs are small rural codes
+that fell below the 100-return threshold. Row coverage, not ZIP
+coverage, is the relevant figure for RQ1.</p>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr>
+<th>Variable (n = 491 ZIPs)</th>
+<th>mean</th>
+<th>std</th>
+<th>min</th>
+<th>Q1</th>
+<th>median</th>
+<th>Q3</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AVG_AGI</code> (thousands USD)</td>
+<td>97.23</td>
+<td>68.91</td>
+<td>33.44</td>
+<td>67.53</td>
+<td>80.90</td>
+<td>103.65</td>
+<td>1,191.71</td>
+</tr>
+<tr>
+<td>EV per 1,000 returns</td>
+<td>70.50</td>
+<td>148.30</td>
+<td>1.52</td>
+<td>26.88</td>
+<td>48.39</td>
+<td>86.46</td>
+<td>3,127.78</td>
+</tr>
+</tbody>
+</table>
+<p>Table 4. Summary of the joined D1 × D3 frame.</p>
+<p>The answer to RQ1 is unambiguous. Spearman’s rho between
+<code>AVG_AGI</code> and EVs per 1,000 returns is <strong>ρ =
+0.775</strong>, and the median by quartile rises monotonically:
+<strong>27.5 → 50.2 → 87.1 → 143.5</strong> EVs per 1,000 returns from
+the poorest to the richest quartile — a <strong>5.2× spread</strong>. EV
+ownership in Washington tracks income very closely at the ZIP level.</p>
+<p>For RQ2, the BEV share of each quartile’s EVs rises from
+<strong>75.7% in Q1 to 83.2% in Q4</strong> (Cramér’s V = 0.067). The
+direction is consistent with richer buyers choosing full
+battery-electric cars over plug-in hybrids, but the effect is small
+relative to the ownership gradient: income predicts <em>how many</em>
+EVs a ZIP has far better than <em>which kind</em>.</p>
+<figure>
+<img src="figures/fig7_ev_density_vs_income.png"
+alt="Figure 7. EV density rises with ZIP-level income." />
+<figcaption aria-hidden="true">Figure 7. EV density rises with ZIP-level
+income.</figcaption>
+</figure>
+<p>Figure 7 scatters <code>AVG_AGI</code> against EVs per 1,000 returns,
+one point per ZIP. A scatter is chosen because both variables are
+quantitative and the question is about the form of the relationship, not
+a group difference. The upward trend is clear, dense, and monotone, with
+heteroscedasticity at high income — a few very rich ZIPs reach extreme
+EV density.</p>
+<figure>
+<img src="figures/fig8_ev_density_by_quartile.png"
+alt="Figure 8. Median EV density by income quartile." />
+<figcaption aria-hidden="true">Figure 8. Median EV density by income
+quartile.</figcaption>
+</figure>
+<p>Figure 8 shows the median EV density per income quartile. Bars are
+appropriate for four ordered groups, and using medians rather than means
+keeps the two extreme ZIPs from dominating. The step pattern is the
+quantitative core of the equity claim.</p>
+<h3 id="join-d2-d3-the-secondary-market-question">6.5 Join D2 × D3 — the
+secondary-market question</h3>
+<p>D2 relates to D3 the same way D1 does, through
+<code>Postal Code</code>; here registrations are counted per ZIP and
+split by <code>New or Used Vehicle</code> before merging. D2 spans 2,778
+distinct ZIPs, and <strong>496 match</strong> the income profile — again
+only 17.9% of ZIPs but <strong>99.4% of transaction rows</strong>, since
+99.6% of D2 rows are Washington addresses.</p>
+<p>This join produced the finding that changed RQ2. The used share of
+registrations by income quartile is <strong>84.7%, 84.6%, 84.7%,
+83.2%</strong> — a spread of 1.5 percentage points. The chi-square test
+returns p ≈ 7 × 10⁻¹⁸², but Cramér’s V is <strong>0.021</strong>, and
+the minimum expected cell count is 32,779. With two million rows, a
+1.5-point difference is “significant” and substantively trivial: the
+new/used split carries almost no income information.</p>
+<figure>
+<img src="figures/fig9_used_share_by_quartile.png"
+alt="Figure 9. Used-vehicle share by income quartile." />
+<figcaption aria-hidden="true">Figure 9. Used-vehicle share by income
+quartile.</figcaption>
+</figure>
+<p>Figure 9 plots the used share per quartile with a zoomed y-axis.
+Zooming is deliberate: it makes the near-flatness visible, which is the
+finding. A reader should conclude that the used market is not
+disproportionately serving low-income ZIPs in this data.</p>
+<figure>
+<img src="figures/fig10_volume_by_quartile.png"
+alt="Figure 10. Matched transaction volume by income quartile." />
+<figcaption aria-hidden="true">Figure 10. Matched transaction volume by
+income quartile.</figcaption>
+</figure>
+<p>Figure 10 gives the number of matched registrations behind each
+quartile, so the reader can see that the flat used share is not an
+artefact of empty cells.</p>
+<h3 id="join-d2-d1-vehicles-and-events">6.6 Join D2 × D1 — vehicles and
+events</h3>
+<p>D1 and D2 are related by vehicle identity: both carry
+<code>DOL Vehicle ID</code>, which is the only safe key because
+<code>VIN (1-10)</code> is a shared prefix. D2 contains <strong>407,930
+distinct vehicle IDs</strong>, and <strong>all 304,258 currently
+registered vehicles in D1 appear among them</strong>; conversely 74.6%
+of transacted IDs appear in the current population. The remainder are
+vehicles that have since left Washington’s fleet or been scrapped, which
+is expected for a file spanning fifteen years.</p>
+<figure>
+<img src="figures/fig11_transactions_per_vehicle.png"
+alt="Figure 11. How many transactions a vehicle appears in." />
+<figcaption aria-hidden="true">Figure 11. How many transactions a
+vehicle appears in.</figcaption>
+</figure>
+<p>Figure 11 bar-charts the number of transactions per vehicle, capped
+at ten. Most vehicles appear once or twice; the capped tail is visible
+as a spike at 10. This tells the reader that D2 is event-level and that
+naively counting rows per vehicle would double-count resales.</p>
+<figure>
+<img src="figures/fig12_model_year_composition.png"
+alt="Figure 12. Model-year composition, population versus transactions." />
+<figcaption aria-hidden="true">Figure 12. Model-year composition,
+population versus transactions.</figcaption>
+</figure>
+<p>Figure 12 compares the model-year distribution of current
+registrations with that of all transactions, as shares so the two very
+different row counts are comparable. The transaction file is skewed
+toward older model years, as expected when it includes every historical
+resale.</p>
+<h3 id="null-hypotheses-and-test-assumptions">6.7 Null hypotheses and
+test assumptions</h3>
+<p>Because this project claims <strong>Result Validity</strong>, Table 5
+records the null hypothesis, test, and assumptions for each question,
+and what the EDA verified.</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>RQ</th>
+<th>Null hypothesis</th>
+<th>Test</th>
+<th>Assumptions</th>
+<th>Verified in EDA?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RQ1</td>
+<td>ρ = 0: no monotonic association between ZIP income and EV
+density</td>
+<td>Spearman + permutation (10,000 shuffles)</td>
+<td>monotonic relationship; observations not independent</td>
+<td>Monotone trend visible in Figure 7; ZIPs are spatially
+autocorrelated, so a permutation null is used rather than an asymptotic
+p-value</td>
+</tr>
+<tr>
+<td>RQ2</td>
+<td>BEV/PHEV composition independent of income quartile</td>
+<td>chi-square + Cramér’s V</td>
+<td>expected count ≥ 5 per cell</td>
+<td>Yes — minimum expected cell 32,779 (Table 6)</td>
+</tr>
+<tr>
+<td>RQ4</td>
+<td>price distribution identical either side of the range threshold</td>
+<td>Mann-Whitney U + OLS interaction</td>
+<td>continuous skewed outcome; groups independent</td>
+<td>Skewness <strong>148.6</strong> and kurtosis <strong>25,909</strong>
+confirm the U test is appropriate; the HB 2042 flag fails as a clean
+threshold (below)</td>
+</tr>
+</tbody>
+</table>
+<p>Table 5. Planned tests and the assumption checks performed in this
+EDA.</p>
+<p>The RQ4 check produced the second important data-quality finding. The
+<code>Meets 2019 HB 2042 Electric Range Requirement</code> flag is
+<strong>not</strong> a clean function of <code>Electric Range</code>:
+1,749,291 rows are flagged <code>True</code> yet have a median recorded
+range of <strong>0</strong>, while the 214,802 flagged
+<code>False</code> rows have ranges between 1 and 29 miles. The flag
+encodes eligibility rather than a range comparison, so RQ4 will use an
+explicit <code>Electric Range &gt;= 30</code> rule and document that
+choice.</p>
+<h2 id="challenge-goals-update">7. Challenge Goals Update</h2>
+<p>Both goals from the proposal remain intact. <strong>Multiple
+Datasets</strong> is satisfied with three datasets and three joins, and
+this EDA measured each join’s coverage by rows rather than by keys
+(Table 6). <strong>Result Validity</strong> is satisfied by the tests in
+Table 5, whose assumptions have now been checked against the data rather
+than assumed. No goal was scaled back; RQ2’s revision changes the
+variable, not the difficulty.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Join</th>
+<th>Key coverage</th>
+<th>Row coverage</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1 × D3</td>
+<td>491 / 1,198 ZIPs (41.0%)</td>
+<td>99.5% of EV rows</td>
+<td>unmatched ZIPs are small rural codes</td>
+</tr>
+<tr>
+<td>D2 × D3</td>
+<td>496 / 2,778 ZIPs (17.9%)</td>
+<td>99.4% of transaction rows</td>
+<td>99.6% of rows are WA addresses</td>
+</tr>
+<tr>
+<td>D2 × D1</td>
+<td>304,258 / 407,930 vehicle IDs</td>
+<td>100% of D1 IDs</td>
+<td>remainder left the fleet</td>
+</tr>
+</tbody>
+</table>
+<p>Table 6. Join coverage, aggregated by rows rather than keys.</p>
+<h2 id="work-plan-evaluation">8. Work Plan Evaluation</h2>
+<p>The estimates were badly off in one direction. Tasks 1 and 2
+(downloaders, loaders, cleaning) were budgeted at 10 hours; in practice
+the download took about three minutes of wall time and the loaders were
+written and debugged in roughly an hour, because the data was far
+cleaner than anticipated — 0.005% and 0.002% missingness meant no
+imputation strategy was needed. Task 3 (EDA) was budgeted at 4 hours and
+took about 2.5.</p>
+<p>The estimate was wrong for a specific reason worth recording: the
+proposal assumed messy data would dominate the effort, but these are
+well-curated government exports. The remaining work is tasks 4–6 as
+planned — RQ1/RQ2 analyses with the permutation and chi-square tests,
+RQ3/RQ4 including the OLS model, then figures and report — which I now
+estimate at <strong>20 hours</strong>, not 17, because RQ2’s revision
+adds a join-level comparison and RQ4 needs an explicit threshold rule
+plus an outlier policy for the $12.3 million price.</p>
+<p>One new risk: D2 has grown from 258 MB at proposal time to
+<strong>952 MB</strong> now. The download script pins expected sizes and
+flags changes, and it did flag this one, so the growth is documented
+rather than silent.</p>
+<h2 id="testing">9. Testing</h2>
+<p>Testing followed the principle that the dangerous failures in this
+project are silent: a join that matches nothing, or a ZIP normalisation
+that quietly turns <code>98004</code> into <code>9804</code> and drops a
+fifth of the rows, would still “run” and still produce a
+plausible-looking report.</p>
+<p>Three mechanisms guard against that. First,
+<code>tests/test_data.py</code> uses <code>pytest</code> with hand-built
+frames of known content to assert the exact behaviour of
+<code>normalize_zip</code> (including leading zeros, <code>00000</code>,
+empty strings, and float-formatted input), of <code>zip_ev_counts</code>
+(that duplicates collapse by vehicle rather than by row), of
+<code>income_profile</code> (that the 100-return threshold is applied),
+and of <code>add_income_quartile</code> (that quartiles are
+return-weighted and cover all rows). Second, the loaders carry explicit
+<code>usecols</code> lists, so a renamed upstream column raises
+<code>KeyError</code> instead of silently returning <code>NaN</code>s.
+Third, the analysis script writes every number it computes to
+<code>notes/eda_stats.json</code>, and the report quotes those values,
+so prose cannot drift from computation.</p>
+<p>All assertions are in the test file and run with
+<code>pytest tests/</code>. I also verified the two headline numbers
+independently by a different route — recomputing the quartile medians
+from the raw CSVs with a separate query and comparing.</p>
+<h2 id="collaboration">10. Collaboration</h2>
+<p>Resources consulted beyond course staff: the Washington DOL open-data
+documentation for field definitions, the IRS Statistics of Income
+documentation for the meaning of <code>A00100</code> and
+<code>agi_stub</code>, and the
+<code>pandas</code>/<code>scipy</code>/<code>statsmodels</code>
+reference documentation. I used an AI coding assistant to scaffold the
+loader modules and to help edit prose in this report; all analysis
+decisions, interpretation, and the accuracy of every reported number are
+my responsibility, and the numbers in this report are reproducible from
+the code in the repository.</p>
+</body>
+</html>

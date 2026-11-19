@@ -5,7 +5,7 @@ subtitle: "CSE 163 Final Project — Part 2: Exploratory Data Analysis"
 
 **Author:** David Gao  **Course:** CSE 163, Autumn 2026
 
-**GitHub repository:** <https://github.com/USERNAME/REPO>
+**GitHub repository:** <https://github.com/David-Gao-uw/ev-equity-project>
 
 ## 1. Summary of Research Questions
 

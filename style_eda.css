@@ -1,0 +1,21 @@
+@page { size: letter; margin: 0.62in 0.7in 0.72in 0.7in; }
+body { font-family: "Georgia", "Times New Roman", serif; font-size: 11pt; line-height: 1.26; color: #111; }
+header#title-block-header { margin-bottom: 1em; border-bottom: 2px solid #222; padding-bottom: .6em; }
+h1.title { font-size: 16pt; line-height: 1.24; margin: 0 0 .25em 0; }
+p.subtitle { font-size: 11pt; color: #444; margin: 0; font-style: italic; }
+h2 { font-size: 12.5pt; margin: 1.1em 0 .35em 0; padding-bottom: .12em; border-bottom: 1px solid #bbb; page-break-after: avoid; }
+h3 { font-size: 11pt; margin: .8em 0 .25em 0; page-break-after: avoid; color: #0b3d75; }
+p { margin: .38em 0; orphans: 3; widows: 3; }
+ul, ol { margin: .25em 0 .5em 1.35em; padding: 0; }
+li { margin-bottom: .18em; }
+a { color: #0b4f9e; text-decoration: none; word-break: break-all; }
+code { font-family: Menlo, Consolas, monospace; font-size: 9.5pt; background: #f3f3f3; padding: 0 .2em; }
+table { border-collapse: collapse; width: 100%; margin: .5em 0 .7em 0; font-size: 10pt; line-height: 1.2; page-break-inside: avoid; }
+th { background: #eee; text-align: left; font-weight: 600; }
+th, td { border: 1px solid #bbb; padding: .25em .4em; vertical-align: top; }
+figure { float: right; width: 43%; margin: .15em 0 .55em .85em; page-break-inside: avoid; text-align: center; }
+figure img { width: 100% !important; }
+figcaption { font-size: 9.5pt; font-style: italic; color: #333; margin-top: .2em; text-align: left; padding: 0 .15em; }
+
+h2, h3 { clear: both; }
+table { clear: both; }

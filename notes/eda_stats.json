@@ -1,0 +1,310 @@
+{
+  "d1": {
+    "missing": {
+      "dataset": "ev_population",
+      "rows": 304258,
+      "columns": 10,
+      "cells_missing": 137,
+      "cells_total": 3042580,
+      "pct_missing": 0.005,
+      "by_column": {
+        "County": {
+          "missing": 31,
+          "pct": 0.01
+        },
+        "Postal Code": {
+          "missing": 31,
+          "pct": 0.01
+        },
+        "Electric Range": {
+          "missing": 13,
+          "pct": 0.0
+        },
+        "2020 GEOID": {
+          "missing": 31,
+          "pct": 0.01
+        },
+        "ZIP": {
+          "missing": 31,
+          "pct": 0.01
+        }
+      }
+    },
+    "range_summary": {
+      "n": 304245,
+      "mean": 35.61337737678516,
+      "std": 74.90091078392796,
+      "min": 0.0,
+      "q1": 0.0,
+      "median": 0.0,
+      "q3": 32.0,
+      "max": 337.0
+    },
+    "model_year_counts": {
+      "2023": 61745,
+      "2024": 49514,
+      "2026": 41110,
+      "2025": 36787,
+      "2022": 30059,
+      "2021": 20599,
+      "2018": 13662,
+      "2020": 11981,
+      "2019": 10658,
+      "2017": 8300,
+      "2016": 4962,
+      "2015": 4310,
+      "2013": 3760,
+      "2014": 3099,
+      "2027": 1887,
+      "2012": 1255,
+      "2011": 520,
+      "2010": 20,
+      "2008": 17,
+      "2000": 8,
+      "1999": 3,
+      "2002": 1,
+      "2003": 1
+    },
+    "type_counts": {
+      "Battery Electric Vehicle (BEV)": 245361,
+      "Plug-in Hybrid Electric Vehicle (PHEV)": 58897
+    },
+    "make_counts": {
+      "TESLA": 124009,
+      "CHEVROLET": 20328,
+      "FORD": 16088,
+      "NISSAN": 16064,
+      "KIA": 15159,
+      "TOYOTA": 14801,
+      "HYUNDAI": 12830,
+      "BMW": 12537,
+      "RIVIAN": 10349,
+      "VOLVO": 8355
+    },
+    "zip_missing": 31
+  },
+  "d2": {
+    "missing": {
+      "dataset": "ev_transactions",
+      "rows": 1964093,
+      "columns": 13,
+      "cells_missing": 632,
+      "cells_total": 25533209,
+      "pct_missing": 0.002,
+      "by_column": {
+        "Electric Range": {
+          "missing": 46,
+          "pct": 0.0
+        },
+        "County": {
+          "missing": 195,
+          "pct": 0.01
+        },
+        "State": {
+          "missing": 1,
+          "pct": 0.0
+        },
+        "Postal Code": {
+          "missing": 195,
+          "pct": 0.01
+        },
+        "ZIP": {
+          "missing": 195,
+          "pct": 0.01
+        }
+      }
+    },
+    "year_counts": {
+      "2025": 381463,
+      "2026": 352787,
+      "2024": 327213,
+      "2023": 249581,
+      "2022": 165827,
+      "2021": 123050,
+      "2020": 88755,
+      "2019": 77358,
+      "2018": 62090,
+      "2017": 43186,
+      "2016": 31286,
+      "2015": 23283,
+      "2014": 17821,
+      "2013": 12842,
+      "2012": 4953,
+      "2011": 2488,
+      "2010": 110
+    },
+    "condition_counts": {
+      "Used": 1649762,
+      "New": 314331
+    },
+    "type_counts": {
+      "Registration Renewal": 963861,
+      "Original Registration": 405599,
+      "Original Title": 396812,
+      "Transfer Title": 101351,
+      "Registration at time of Transfer": 96470
+    },
+    "range_summary": {
+      "n": 1964047,
+      "mean": 60.918064588067395,
+      "std": 89.4899707274765,
+      "min": 0.0,
+      "q1": 0.0,
+      "median": 17.0,
+      "q3": 84.0,
+      "max": 337.0
+    },
+    "zip_missing": 195,
+    "used_price_summary": {
+      "n": 150300,
+      "mean": 30223.20139055223,
+      "std": 62672.398142723316,
+      "min": 1.0,
+      "q1": 16700.0,
+      "median": 25995.0,
+      "q3": 37991.0,
+      "max": 12312016.0
+    },
+    "used_with_price_rows": 150300
+  },
+  "d3": {
+    "raw_rows": 2994,
+    "profile_rows": 499,
+    "missing": {
+      "dataset": "irs_zip_income (WA rows)",
+      "rows": 2994,
+      "columns": 7,
+      "cells_missing": 0,
+      "cells_total": 20958,
+      "pct_missing": 0.0,
+      "by_column": {}
+    },
+    "returns_summary": {
+      "n": 499,
+      "mean": 7427.635270541082,
+      "std": 7973.08114287582,
+      "min": 100.0,
+      "q1": 800.0,
+      "median": 4010.0,
+      "q3": 12790.0,
+      "max": 51180.0
+    },
+    "avg_agi_summary": {
+      "n": 499,
+      "mean": 96.75245119689285,
+      "std": 68.5193222691141,
+      "min": 33.4375,
+      "q1": 67.31350750416898,
+      "median": 80.5577736318408,
+      "q3": 103.48105893058724,
+      "max": 1191.7051612903226
+    },
+    "quartile_counts": {
+      "1": 213,
+      "2": 119,
+      "3": 90,
+      "4": 77
+    },
+    "quartile_median_agi": {
+      "1": 65.3,
+      "2": 83.1,
+      "3": 104.3,
+      "4": 164.5
+    }
+  },
+  "join_d1_d3": {
+    "ev_zips": 1198,
+    "income_zips": 499,
+    "matched_zips": 491,
+    "coverage_pct": 40.98,
+    "ev_rows_matched_pct": 99.5,
+    "ev_per_1k_summary": {
+      "n": 491,
+      "mean": 70.49753563043002,
+      "std": 148.30093956747731,
+      "min": 1.5151515151515151,
+      "q1": 26.878360215053764,
+      "median": 48.387096774193544,
+      "q3": 86.46154033766531,
+      "max": 3127.777777777778
+    },
+    "avg_agi_summary": {
+      "n": 491,
+      "mean": 97.22971725821066,
+      "std": 68.90622177558177,
+      "min": 33.4375,
+      "q1": 67.52735969387756,
+      "median": 80.8992,
+      "q3": 103.64685227212402,
+      "max": 1191.7051612903226
+    },
+    "spearman_rho": 0.7749,
+    "spearman_p": 1.7172135465036038e-99,
+    "zips_below_100_returns_excluded": 0,
+    "median_ev_per_1k_by_quartile": {
+      "1": 27.49,
+      "2": 50.24,
+      "3": 87.09,
+      "4": 143.5
+    },
+    "bev_share_by_quartile": {
+      "1": 0.7566,
+      "2": 0.7812,
+      "3": 0.8,
+      "4": 0.8317
+    },
+    "mix_chi2": 1352.46,
+    "mix_p": 6.097104718318025e-293,
+    "mix_cramers_v": 0.06684
+  },
+  "join_d2_d3": {
+    "tx_zips": 2778,
+    "matched_zips": 496,
+    "coverage_pct": 17.85,
+    "used_share_by_quartile": {
+      "1": 0.8474,
+      "2": 0.8456,
+      "3": 0.8474,
+      "4": 0.8316
+    },
+    "chi2": 844.39,
+    "chi2_p": 1.021040313607605e-182,
+    "dof": 3,
+    "min_expected_cell": 32779.3,
+    "cramers_v": 0.0208,
+    "expected_ok": true
+  },
+  "join_d2_d1": {
+    "pop_vehicle_ids": 304258,
+    "tx_vehicle_ids": 407930,
+    "matched_ids": 304258,
+    "tx_matched_pct": 74.59
+  },
+  "assumptions": {
+    "used_price_skew": 148.62,
+    "used_price_kurtosis": 25908.709,
+    "flag_false_rows": 214802,
+    "flag_true_rows": 1749291,
+    "range_summary_flag_false": {
+      "n": 214756,
+      "mean": 19.55876902158729,
+      "std": 5.4270327598309045,
+      "min": 1.0,
+      "q1": 17.0,
+      "median": 20.0,
+      "q3": 25.0,
+      "max": 29.0
+    },
+    "range_summary_flag_true": {
+      "n": 1749291,
+      "mean": 65.99563994784172,
+      "std": 93.553355701603,
+      "min": 0.0,
+      "q1": 0.0,
+      "median": 0.0,
+      "q3": 84.0,
+      "max": 337.0
+    },
+    "min_expected_cell_chi2": 32779.3
+  }
+}

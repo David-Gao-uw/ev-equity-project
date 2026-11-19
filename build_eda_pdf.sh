@@ -4,6 +4,12 @@ set -euo pipefail
 cd "$(dirname "$0")"
 EDGE="/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
 
+# Fail before touching anything if the page-numbering step cannot run.
+./.venv/bin/python -c "import pypdf, reportlab" || {
+  echo "pypdf/reportlab missing: run .venv/bin/pip install -r requirements.txt" >&2
+  exit 1
+}
+
 pandoc eda_report.md -f markdown -t html5 -s --css style_eda.css \
   --metadata title-prefix="CSE 163 EDA" -o eda_report.html
 
@@ -26,7 +32,7 @@ for index, page in enumerate(reader.pages, start=1):
     height = float(page.mediabox.height)
     buffer = io.BytesIO()
     overlay = canvas.Canvas(buffer, pagesize=(width, height))
-    overlay.setFont("Times-Roman", 10)
+    overlay.setFont("Times-Roman", 11)
     overlay.drawCentredString(width / 2, 0.42 * 72, f"Page {index} of {total}")
     overlay.save()
     buffer.seek(0)

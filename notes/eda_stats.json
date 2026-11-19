@@ -1,12 +1,13 @@
 {
   "d1": {
+    "file_columns": 16,
     "missing": {
       "dataset": "ev_population",
       "rows": 304258,
-      "columns": 10,
+      "columns": 12,
       "cells_missing": 137,
-      "cells_total": 3042580,
-      "pct_missing": 0.005,
+      "cells_total": 3651096,
+      "pct_missing": 0.004,
       "by_column": {
         "County": {
           "missing": 31,
@@ -18,7 +19,7 @@
         },
         "Electric Range": {
           "missing": 13,
-          "pct": 0.0
+          "pct": 0.004
         },
         "2020 GEOID": {
           "missing": 31,
@@ -40,36 +41,87 @@
       "q3": 32.0,
       "max": 337.0
     },
+    "range_summary_researched": {
+      "n": 103438,
+      "mean": 104.75059455905954,
+      "std": 96.22446062259053,
+      "min": 1.0,
+      "q1": 30.0,
+      "median": 44.0,
+      "q3": 215.0,
+      "max": 337.0
+    },
+    "range_zero_rows": 200807,
+    "range_zero_share_of_bev": 0.8184,
+    "cafv_by_range_zero": {
+      "Clean Alternative Fuel Vehicle Eligible": {
+        "False": 79226,
+        "True": 0
+      },
+      "Eligibility unknown as battery range has not been researched": {
+        "False": 0,
+        "True": 200807
+      },
+      "Not eligible due to low battery range": {
+        "False": 24225,
+        "True": 0
+      }
+    },
+    "model_year_summary": {
+      "n": 304258,
+      "mean": 2022.4427821125491,
+      "std": 3.0980722436284642,
+      "min": 1999.0,
+      "q1": 2021.0,
+      "median": 2023.0,
+      "q3": 2025.0,
+      "max": 2027.0
+    },
     "model_year_counts": {
-      "2023": 61745,
-      "2024": 49514,
-      "2026": 41110,
-      "2025": 36787,
-      "2022": 30059,
-      "2021": 20599,
-      "2018": 13662,
-      "2020": 11981,
-      "2019": 10658,
-      "2017": 8300,
-      "2016": 4962,
-      "2015": 4310,
+      "1999": 3,
+      "2000": 8,
+      "2002": 1,
+      "2003": 1,
+      "2008": 17,
+      "2010": 20,
+      "2011": 520,
+      "2012": 1255,
       "2013": 3760,
       "2014": 3099,
-      "2027": 1887,
-      "2012": 1255,
-      "2011": 520,
-      "2010": 20,
-      "2008": 17,
-      "2000": 8,
-      "1999": 3,
-      "2002": 1,
-      "2003": 1
+      "2015": 4310,
+      "2016": 4962,
+      "2017": 8300,
+      "2018": 13662,
+      "2019": 10658,
+      "2020": 11981,
+      "2021": 20599,
+      "2022": 30059,
+      "2023": 61745,
+      "2024": 49514,
+      "2025": 36787,
+      "2026": 41110,
+      "2027": 1887
     },
+    "model_years_before_2010": 30,
     "type_counts": {
       "Battery Electric Vehicle (BEV)": 245361,
       "Plug-in Hybrid Electric Vehicle (PHEV)": 58897
     },
-    "make_counts": {
+    "cafv_counts": {
+      "Eligibility unknown as battery range has not been researched": 200807,
+      "Clean Alternative Fuel Vehicle Eligible": 79226,
+      "Not eligible due to low battery range": 24225
+    },
+    "state_counts": {
+      "WA": 303470,
+      "CA": 175,
+      "VA": 105,
+      "FL": 46,
+      "MD": 45
+    },
+    "out_of_state_rows": 788,
+    "out_of_state_codes": 51,
+    "make_counts_top10": {
       "TESLA": 124009,
       "CHEVROLET": 20328,
       "FORD": 16088,
@@ -84,17 +136,18 @@
     "zip_missing": 31
   },
   "d2": {
+    "file_columns": 33,
     "missing": {
       "dataset": "ev_transactions",
       "rows": 1964093,
-      "columns": 13,
+      "columns": 14,
       "cells_missing": 632,
-      "cells_total": 25533209,
+      "cells_total": 27497302,
       "pct_missing": 0.002,
       "by_column": {
         "Electric Range": {
           "missing": 46,
-          "pct": 0.0
+          "pct": 0.002
         },
         "County": {
           "missing": 195,
@@ -114,29 +167,6 @@
         }
       }
     },
-    "year_counts": {
-      "2025": 381463,
-      "2026": 352787,
-      "2024": 327213,
-      "2023": 249581,
-      "2022": 165827,
-      "2021": 123050,
-      "2020": 88755,
-      "2019": 77358,
-      "2018": 62090,
-      "2017": 43186,
-      "2016": 31286,
-      "2015": 23283,
-      "2014": 17821,
-      "2013": 12842,
-      "2012": 4953,
-      "2011": 2488,
-      "2010": 110
-    },
-    "condition_counts": {
-      "Used": 1649762,
-      "New": 314331
-    },
     "type_counts": {
       "Registration Renewal": 963861,
       "Original Registration": 405599,
@@ -144,6 +174,73 @@
       "Transfer Title": 101351,
       "Registration at time of Transfer": 96470
     },
+    "condition_counts": {
+      "Used": 1649762,
+      "New": 314331
+    },
+    "type_by_condition": {
+      "Original Registration": {
+        "New": 0,
+        "Used": 405599
+      },
+      "Original Title": {
+        "New": 314331,
+        "Used": 82481
+      },
+      "Registration Renewal": {
+        "New": 0,
+        "Used": 963861
+      },
+      "Registration at time of Transfer": {
+        "New": 0,
+        "Used": 96470
+      },
+      "Transfer Title": {
+        "New": 0,
+        "Used": 101351
+      }
+    },
+    "renewal_share": 0.4907,
+    "year_counts": {
+      "2010": 110,
+      "2011": 2488,
+      "2012": 4953,
+      "2013": 12842,
+      "2014": 17821,
+      "2015": 23283,
+      "2016": 31286,
+      "2017": 43186,
+      "2018": 62090,
+      "2019": 77358,
+      "2020": 88755,
+      "2021": 123050,
+      "2022": 165827,
+      "2023": 249581,
+      "2024": 327213,
+      "2025": 381463,
+      "2026": 352787
+    },
+    "months_covered": {
+      "2010": 12,
+      "2011": 12,
+      "2012": 12,
+      "2013": 12,
+      "2014": 12,
+      "2015": 12,
+      "2016": 12,
+      "2017": 12,
+      "2018": 12,
+      "2019": 12,
+      "2020": 12,
+      "2021": 12,
+      "2022": 12,
+      "2023": 12,
+      "2024": 12,
+      "2025": 12,
+      "2026": 10
+    },
+    "date_first": 20100106,
+    "date_last": 20261031,
     "range_summary": {
       "n": 1964047,
       "mean": 60.918064588067395,
@@ -154,8 +251,25 @@
       "q3": 84.0,
       "max": 337.0
     },
-    "zip_missing": 195,
-    "used_price_summary": {
+    "model_year_summary": {
+      "n": 1964093,
+      "mean": 2020.4081914654755,
+      "std": 3.844539763097829,
+      "min": 1993.0,
+      "q1": 2018.0,
+      "median": 2021.0,
+      "q3": 2023.0,
+      "max": 2027.0
+    },
+    "out_of_state_share": 0.0043,
+    "flag_counts": {
+      "True": 1749291,
+      "False": 214802
+    },
+    "used_priced_rows": 150300,
+    "used_title_rows": 183832,
+    "used_title_priced_share": 0.8176,
+    "used_price_summary_raw": {
       "n": 150300,
       "mean": 30223.20139055223,
       "std": 62672.398142723316,
@@ -165,59 +279,269 @@
       "q3": 37991.0,
       "max": 12312016.0
     },
-    "used_with_price_rows": 150300
+    "largest_prices": [
+      12312016,
+      11292025,
+      11032022
+    ],
+    "price_below_min_rows": 934,
+    "price_above_max_rows": 75,
+    "per_vehicle": {
+      "vehicles": 407930,
+      "share_one": 0.0107,
+      "share_two_or_fewer": 0.2286,
+      "median": 4.0,
+      "mean": 4.81,
+      "share_ten_plus": 0.0885
+    }
+  },
+  "rq3": {
+    "counties": 39,
+    "full_years": [
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "partial_years": [
+      2026
+    ],
+    "new_titles_by_year": {
+      "2010": 21,
+      "2011": 1182,
+      "2012": 1822,
+      "2013": 4649,
+      "2014": 4663,
+      "2015": 4178,
+      "2016": 5315,
+      "2017": 7103,
+      "2018": 12690,
+      "2019": 11901,
+      "2020": 11958,
+      "2021": 20901,
+      "2022": 30410,
+      "2023": 51878,
+      "2024": 57659,
+      "2025": 53061,
+      "2026": 34591
+    },
+    "king_share_by_year": {
+      "2010": 0.7619,
+      "2011": 0.643,
+      "2012": 0.5231,
+      "2013": 0.5651,
+      "2014": 0.5726,
+      "2015": 0.6285,
+      "2016": 0.6386,
+      "2017": 0.6099,
+      "2018": 0.6139,
+      "2019": 0.6057,
+      "2020": 0.5907,
+      "2021": 0.5524,
+      "2022": 0.5572,
+      "2023": 0.5437,
+      "2024": 0.5114,
+      "2025": 0.514,
+      "2026": 0.4968
+    },
+    "statewide_growth": {
+      "2011": 55.2857,
+      "2012": 0.5415,
+      "2013": 1.5516,
+      "2014": 0.003,
+      "2015": -0.104,
+      "2016": 0.2721,
+      "2017": 0.3364,
+      "2018": 0.7866,
+      "2019": -0.0622,
+      "2020": 0.0048,
+      "2021": 0.7479,
+      "2022": 0.455,
+      "2023": 0.706,
+      "2024": 0.1114,
+      "2025": -0.0797,
+      "2026": -0.3481
+    },
+    "statewide_growth_3yr_mean": {
+      "2013": 19.1263,
+      "2014": 0.6987,
+      "2015": 0.4835,
+      "2016": 0.057,
+      "2017": 0.1682,
+      "2018": 0.465,
+      "2019": 0.3536,
+      "2020": 0.2431,
+      "2021": 0.2302,
+      "2022": 0.4025,
+      "2023": 0.6363,
+      "2024": 0.4241,
+      "2025": 0.2459,
+      "2026": -0.1055
+    },
+    "county_totals_full_years": {
+      "King": 152897,
+      "Snohomish": 33650,
+      "Pierce": 22543,
+      "Clark": 15427,
+      "Thurston": 9025,
+      "Kitsap": 8598,
+      "Spokane": 7021,
+      "Whatcom": 5497,
+      "Benton": 3053,
+      "Skagit": 2710,
+      "Island": 2537,
+      "Chelan": 1439,
+      "Yakima": 1381,
+      "Clallam": 1372,
+      "Cowlitz": 1298,
+      "Jefferson": 1134,
+      "Mason": 1099,
+      "Lewis": 1001,
+      "San Juan": 916,
+      "Franklin": 826,
+      "Grant": 813,
+      "Grays Harbor": 789,
+      "Kittitas": 768,
+      "Walla Walla": 621,
+      "Douglas": 521,
+      "Whitman": 469,
+      "Klickitat": 397,
+      "Okanogan": 329,
+      "Stevens": 291,
+      "Pacific": 278,
+      "Skamania": 243,
+      "Asotin": 100,
+      "Pend Oreille": 87,
+      "Adams": 80,
+      "Wahkiakum": 58,
+      "Lincoln": 55,
+      "Ferry": 40,
+      "Columbia": 27,
+      "Garfield": 1
+    }
   },
   "d3": {
-    "raw_rows": 2994,
-    "profile_rows": 499,
+    "file_columns": 165,
+    "wa_rows_in_file": 3000,
+    "pseudo_zip_rows_dropped": 12,
+    "returns_in_99999_bucket": 51180,
+    "spearman_returns_vs_agi": 0.425,
+    "median_agi_small_zips": {
+      "zips": 140,
+      "median": 69.2
+    },
+    "median_agi_large_zips": {
+      "zips": 169,
+      "median": 94.5
+    },
     "missing": {
       "dataset": "irs_zip_income (WA rows)",
-      "rows": 2994,
+      "rows": 2988,
       "columns": 7,
       "cells_missing": 0,
-      "cells_total": 20958,
+      "cells_total": 20916,
       "pct_missing": 0.0,
       "by_column": {}
     },
+    "agi_stub_counts": {
+      "1": 498,
+      "2": 498,
+      "3": 498,
+      "4": 498,
+      "5": 498,
+      "6": 498
+    },
+    "profile_rows": 498,
+    "zips_below_min_returns": 0,
+    "min_returns_observed": 100.0,
     "returns_summary": {
-      "n": 499,
-      "mean": 7427.635270541082,
-      "std": 7973.08114287582,
+      "n": 498,
+      "mean": 7339.779116465864,
+      "std": 7735.537953886707,
       "min": 100.0,
       "q1": 800.0,
-      "median": 4010.0,
-      "q3": 12790.0,
-      "max": 51180.0
+      "median": 3985.0,
+      "q3": 12667.5,
+      "max": 37870.0
     },
     "avg_agi_summary": {
-      "n": 499,
-      "mean": 96.75245119689285,
-      "std": 68.5193222691141,
+      "n": 498,
+      "mean": 96.71212817962868,
+      "std": 68.5822937696518,
       "min": 33.4375,
-      "q1": 67.31350750416898,
-      "median": 80.5577736318408,
-      "q3": 103.48105893058724,
+      "q1": 67.30597554196777,
+      "median": 80.53146413550803,
+      "q3": 103.31350172448772,
       "max": 1191.7051612903226
     },
-    "quartile_counts": {
-      "1": 213,
+    "quartile_start_agi": [
+      77.19,
+      93.23,
+      128.24
+    ],
+    "quartile_zip_counts": {
+      "1": 211,
       "2": 119,
-      "3": 90,
-      "4": 77
+      "3": 92,
+      "4": 76
+    },
+    "quartile_returns": {
+      "1": 914060,
+      "2": 911810,
+      "3": 911790,
+      "4": 917550
     },
     "quartile_median_agi": {
       "1": 65.3,
-      "2": 83.1,
-      "3": 104.3,
-      "4": 164.5
-    }
+      "2": 82.9,
+      "3": 103.8,
+      "4": 165.7
+    },
+    "zips_over_600k": [
+      {
+        "zip": "98039",
+        "returns": 1550,
+        "avg_agi": 1191.7
+      }
+    ]
   },
   "join_d1_d3": {
     "ev_zips": 1198,
-    "income_zips": 499,
+    "income_zips": 498,
     "matched_zips": 491,
-    "coverage_pct": 40.98,
+    "zip_coverage_pct": 40.98,
+    "unmatched_zips_wa": 95,
+    "unmatched_zips_other_state": 612,
+    "unmatched_vehicles_wa": 727,
+    "unmatched_vehicles_other_state": 774,
     "ev_rows_matched_pct": 99.5,
+    "merged_shape": [
+      491,
+      9
+    ],
+    "merged_missing_cells": 0,
+    "ev_count_summary": {
+      "n": 491,
+      "mean": 616.5498981670061,
+      "std": 920.6412866190287,
+      "min": 1.0,
+      "q1": 31.0,
+      "median": 206.0,
+      "q3": 884.5,
+      "max": 7221.0
+    },
     "ev_per_1k_summary": {
       "n": 491,
       "mean": 70.49753563043002,
@@ -238,73 +562,434 @@
       "q3": 103.64685227212402,
       "max": 1191.7051612903226
     },
+    "bev_share_summary": {
+      "n": 491,
+      "mean": 0.7639909214843155,
+      "std": 0.1270676995029532,
+      "min": 0.0,
+      "q1": 0.7333333333333333,
+      "median": 0.7800776196636481,
+      "q3": 0.8221783047870004,
+      "max": 1.0
+    },
     "spearman_rho": 0.7749,
-    "spearman_p": 1.7172135465036038e-99,
-    "zips_below_100_returns_excluded": 0,
+    "spearman_rho_excluding_fleet_zips": 0.7736,
+    "fleet_zips": [
+      {
+        "zip": "98134",
+        "ev_count": 1126,
+        "returns": 360,
+        "avg_agi": 249.7,
+        "ev_per_1k": 3127.8
+      }
+    ],
     "median_ev_per_1k_by_quartile": {
-      "1": 27.49,
+      "1": 27.29,
       "2": 50.24,
-      "3": 87.09,
-      "4": 143.5
+      "3": 84.61,
+      "4": 143.72
+    },
+    "regional": {
+      "regions": 14,
+      "regions_tested": 13,
+      "zips_in_tested_regions": 489,
+      "share_above_median_by_region": {
+        "980": 0.923,
+        "981": 0.971,
+        "982": 0.717,
+        "983": 0.733,
+        "984": 0.542,
+        "985": 0.431,
+        "986": 0.587,
+        "988": 0.226,
+        "989": 0.045,
+        "990": 0.107,
+        "991": 0.022,
+        "992": 0.214,
+        "993": 0.148
+      },
+      "test": {
+        "chi2": 198.73,
+        "p": 5.965552001575675e-36,
+        "dof": 12,
+        "min_expected": 7.0,
+        "cramers_v": 0.6375
+      },
+      "within_region_rho": {
+        "980": 0.831,
+        "981": 0.362,
+        "982": 0.824,
+        "983": 0.694,
+        "984": 0.469,
+        "985": 0.609,
+        "986": 0.799,
+        "988": 0.84,
+        "989": 0.894,
+        "990": 0.623,
+        "991": 0.372,
+        "992": 0.82,
+        "993": 0.802
+      },
+      "within_region_rho_positive": 13
     },
     "bev_share_by_quartile": {
-      "1": 0.7566,
-      "2": 0.7812,
-      "3": 0.8,
-      "4": 0.8317
+      "1": 0.7564,
+      "2": 0.7806,
+      "3": 0.7994,
+      "4": 0.8322
     },
-    "mix_chi2": 1352.46,
-    "mix_p": 6.097104718318025e-293,
-    "mix_cramers_v": 0.06684
+    "bev_mix_test": {
+      "chi2": 1381.77,
+      "p": 2.655235688440143e-299,
+      "dof": 3,
+      "min_expected": 6487.1,
+      "cramers_v": 0.0676
+    }
   },
   "join_d2_d3": {
-    "tx_zips": 2778,
-    "matched_zips": 496,
-    "coverage_pct": 17.85,
-    "used_share_by_quartile": {
-      "1": 0.8474,
-      "2": 0.8456,
-      "3": 0.8474,
-      "4": 0.8316
+    "acquisition_rows": 498163,
+    "acquisition_vehicles": 398897,
+    "vehicles_with_repeat_used_acquisition": 28083,
+    "acquisition_zips": 1297,
+    "matched_zips": 495,
+    "zip_coverage_pct": 38.16,
+    "acquisition_rows_matched_pct": 99.51,
+    "merged_shape": [
+      495,
+      8
+    ],
+    "merged_missing_cells": 0,
+    "acquisitions_per_zip_summary": {
+      "n": 495,
+      "mean": 1001.4929292929293,
+      "std": 1530.7637053807612,
+      "min": 1.0,
+      "q1": 42.0,
+      "median": 306.0,
+      "q3": 1488.5,
+      "max": 12831.0
     },
-    "chi2": 844.39,
-    "chi2_p": 1.021040313607605e-182,
-    "dof": 3,
-    "min_expected_cell": 32779.3,
-    "cramers_v": 0.0208,
-    "expected_ok": true
+    "used_share_zip_summary": {
+      "n": 495,
+      "mean": 0.44610732756399657,
+      "std": 0.13901310395613856,
+      "min": 0.0,
+      "q1": 0.37457623844242754,
+      "median": 0.4347319347319347,
+      "q3": 0.5,
+      "max": 1.0
+    },
+    "zip_spearman_used_share_vs_income": -0.5384,
+    "counts_by_quartile": {
+      "1": {
+        "New": 31072,
+        "Used": 26707
+      },
+      "2": {
+        "New": 49519,
+        "Used": 36371
+      },
+      "3": {
+        "New": 72698,
+        "Used": 48143
+      },
+      "4": {
+        "New": 160231,
+        "Used": 70998
+      }
+    },
+    "used_share_by_quartile": {
+      "1": 0.4622,
+      "2": 0.4235,
+      "3": 0.3984,
+      "4": 0.307
+    },
+    "test": {
+      "chi2": 7518.92,
+      "p": 0.0,
+      "dof": 3,
+      "min_expected": 21237.9,
+      "cramers_v": 0.1232
+    },
+    "all_events": {
+      "used_share_by_quartile": {
+        "1": 0.8473,
+        "2": 0.8461,
+        "3": 0.8471,
+        "4": 0.8315
+      },
+      "test": {
+        "chi2": 854.74,
+        "p": 5.8063369058476126e-185,
+        "dof": 3,
+        "min_expected": 32694.5,
+        "cramers_v": 0.0209
+      }
+    },
+    "one_per_vehicle": {
+      "used_share_by_quartile": {
+        "1": 0.3927,
+        "2": 0.3627,
+        "3": 0.3444,
+        "4": 0.2697
+      },
+      "test": {
+        "chi2": 4753.75,
+        "p": 0.0,
+        "dof": 3,
+        "min_expected": 16227.4,
+        "cramers_v": 0.1018
+      }
+    }
   },
   "join_d2_d1": {
     "pop_vehicle_ids": 304258,
     "tx_vehicle_ids": 407930,
     "matched_ids": 304258,
-    "tx_matched_pct": 74.59
-  },
-  "assumptions": {
-    "used_price_skew": 148.62,
-    "used_price_kurtosis": 25908.709,
-    "flag_false_rows": 214802,
-    "flag_true_rows": 1749291,
-    "range_summary_flag_false": {
-      "n": 214756,
-      "mean": 19.55876902158729,
-      "std": 5.4270327598309045,
-      "min": 1.0,
-      "q1": 17.0,
-      "median": 20.0,
-      "q3": 25.0,
-      "max": 29.0
+    "pop_ids_in_tx_pct": 100.0,
+    "tx_ids_in_pop_pct": 74.59,
+    "range_group_by_d1_label": {
+      "0 (unknown)": {
+        "Clean Alternative Fuel Vehicle Eligible": 0,
+        "Eligibility unknown as battery range has not been researched": 48413,
+        "Not eligible due to low battery range": 0,
+        "Not in current fleet": 8151
+      },
+      "1-29 miles": {
+        "Clean Alternative Fuel Vehicle Eligible": 0,
+        "Eligibility unknown as battery range has not been researched": 0,
+        "Not eligible due to low battery range": 15013,
+        "Not in current fleet": 5817
+      },
+      "30+ miles": {
+        "Clean Alternative Fuel Vehicle Eligible": 48815,
+        "Eligibility unknown as battery range has not been researched": 0,
+        "Not eligible due to low battery range": 0,
+        "Not in current fleet": 23081
+      }
     },
-    "range_summary_flag_true": {
-      "n": 1749291,
-      "mean": 65.99563994784172,
-      "std": 93.553355701603,
-      "min": 0.0,
-      "q1": 0.0,
-      "median": 0.0,
-      "q3": 84.0,
+    "rq4_joined_shape": [
+      92726,
+      21
+    ],
+    "rq4_joined_missing_cells": 57815,
+    "rq4_matched_rows": 63828,
+    "rq4_matched_pct": 68.84,
+    "rq4_range_agreement": 1.0,
+    "still_registered_share_by_side": {
+      "below_30": 0.7207,
+      "above_30": 0.679
+    },
+    "median_price_by_range_bin": {
+      "0": {
+        "median": 13400.0,
+        "n": 978
+      },
+      "10": {
+        "median": 25495.0,
+        "n": 9777
+      },
+      "20": {
+        "median": 28995.0,
+        "n": 10075
+      },
+      "30": {
+        "median": 27994.0,
+        "n": 9411
+      },
+      "40": {
+        "median": 42026.0,
+        "n": 2988
+      },
+      "50": {
+        "median": 17800.0,
+        "n": 3237
+      },
+      "60": {
+        "median": 6500.0,
+        "n": 322
+      },
+      "70": {
+        "median": 7023.0,
+        "n": 7095
+      },
+      "80": {
+        "median": 10981.0,
+        "n": 10299
+      },
+      "90": {
+        "median": 14995.0,
+        "n": 1839
+      },
+      "100": {
+        "median": 12991.5,
+        "n": 1794
+      },
+      "110": {
+        "median": 19995.0,
+        "n": 352
+      },
+      "120": {
+        "median": 20993.0,
+        "n": 1024
+      },
+      "140": {
+        "median": 19950.0,
+        "n": 525
+      },
+      "150": {
+        "median": 18995.0,
+        "n": 2965
+      },
+      "170": {
+        "median": 19800.0,
+        "n": 115
+      },
+      "190": {
+        "median": 97881.0,
+        "n": 136
+      },
+      "200": {
+        "median": 37000.0,
+        "n": 5818
+      },
+      "210": {
+        "median": 25525.0,
+        "n": 6486
+      },
+      "220": {
+        "median": 26998.0,
+        "n": 3658
+      },
+      "230": {
+        "median": 20931.0,
+        "n": 5111
+      },
+      "240": {
+        "median": 48250.0,
+        "n": 816
+      },
+      "250": {
+        "median": 18657.0,
+        "n": 1790
+      },
+      "260": {
+        "median": 26970.0,
+        "n": 1370
+      },
+      "270": {
+        "median": 49164.0,
+        "n": 226
+      },
+      "280": {
+        "median": 52800.0,
+        "n": 597
+      },
+      "290": {
+        "median": 33169.0,
+        "n": 1832
+      },
+      "300": {
+        "median": 35376.0,
+        "n": 495
+      },
+      "320": {
+        "median": 29000.0,
+        "n": 1276
+      },
+      "330": {
+        "median": 45888.0,
+        "n": 319
+      }
+    }
+  },
+  "rq4_sample": {
+    "rows": 92726,
+    "vehicles": 72825,
+    "below_rows": 20830,
+    "above_rows": 71896,
+    "excluded_range_zero_rows": 56564,
+    "type_counts": {
+      "Transfer Title": 55874,
+      "Original Title": 36852
+    },
+    "price_summary": {
+      "n": 92726,
+      "mean": 26099.453238573864,
+      "std": 18687.342081458217,
+      "min": 1000.0,
+      "q1": 12995.0,
+      "median": 21880.0,
+      "q3": 34980.0,
+      "max": 249680.0
+    },
+    "price_summary_below": {
+      "n": 20830,
+      "mean": 29316.50628900624,
+      "std": 17850.844941852505,
+      "min": 1000.0,
+      "q1": 16900.0,
+      "median": 27405.5,
+      "q3": 37499.0,
+      "max": 242899.0
+    },
+    "price_summary_above": {
+      "n": 71896,
+      "mean": 25167.395613107823,
+      "std": 18820.446246064846,
+      "min": 1000.0,
+      "q1": 11991.0,
+      "median": 20000.0,
+      "q3": 33000.0,
+      "max": 249680.0
+    },
+    "range_summary": {
+      "n": 92726,
+      "mean": 114.4622543838837,
+      "std": 92.17353014343756,
+      "min": 1.0,
+      "q1": 32.0,
+      "median": 84.0,
+      "q3": 210.0,
       "max": 337.0
     },
-    "min_expected_cell_chi2": 32779.3
+    "model_year_summary": {
+      "n": 92726,
+      "mean": 2017.7343894916205,
+      "std": 3.2257043912160643,
+      "min": 1998.0,
+      "q1": 2015.0,
+      "median": 2018.0,
+      "q3": 2020.0,
+      "max": 2026.0
+    },
+    "odometer_summary": {
+      "n": 92726,
+      "mean": 40971.162133597914,
+      "std": 32335.33024198402,
+      "min": 0.0,
+      "q1": 18969.0,
+      "median": 33060.0,
+      "q3": 55251.0,
+      "max": 992418.0
+    },
+    "odometer_usable_rows": 92508
+  },
+  "assumptions": {
+    "flag_mismatch_researched_rows": 93,
+    "flag_mismatch_ranges": [
+      29
+    ],
+    "range_zero_rows": 932319,
+    "range_zero_flag_true_share": 1.0,
+    "price_skew_raw": 148.62,
+    "price_kurtosis_raw": 25908.7,
+    "price_skew_in_band": 1.754,
+    "log_price_skew_in_band": -0.751,
+    "latest_sale_rows": 72825,
+    "latest_sale_below_rows": 17051,
+    "latest_sale_above_rows": 55774,
+    "log_price_std_below": 0.67,
+    "log_price_std_above": 0.81
   }
 }

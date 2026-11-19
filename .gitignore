@@ -5,3 +5,8 @@ data/
 __pycache__/
 .pytest_cache/
 .DS_Store
+# intermediate files from build_eda_pdf.sh
+eda_raw.pdf
+eda_report.html
+# scratch file written and removed by tests/test_data.py
+tests/temp_test_data.csv

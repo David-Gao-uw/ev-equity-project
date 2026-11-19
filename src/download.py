@@ -1,9 +1,10 @@
 """Fetch the three project datasets and verify they arrived intact.
 
 Running this module downloads every source CSV into ``data/`` and checks
-each file's byte size and row count against the values observed when the
-project was started.  A mismatch means the upstream dataset changed, which
-should be investigated before trusting any downstream result.
+each file's byte size and row count against the snapshot the EDA report was
+computed from (downloaded on ``SNAPSHOT_DATE``).  The two DOL files are live
+and are refreshed upstream every month, so a mismatch is expected later on;
+it means the numbers in the report will not reproduce exactly.
 
 Usage::
 
@@ -15,55 +16,64 @@ import sys
 import urllib.request
 
 DATA_DIR = "data"
+SNAPSHOT_DATE = "2026-11-18"
 
-# name, url, expected bytes (approx), expected data rows
+# name, url, expected bytes, expected data rows (as of SNAPSHOT_DATE)
 SOURCES = [
     (
         "ev_population.csv",
         ("https://data.wa.gov/api/views/"
          "f6w7-q2d2/rows.csv?accessType=DOWNLOAD"),
-        72559172,
-        300142,
+        73578930,
+        304258,
     ),
     (
         "ev_transactions.csv",
         ("https://data.wa.gov/api/views/"
          "rpr4-cgyd/rows.csv?accessType=DOWNLOAD"),
-        257959126,
-        1926507,
+        952392509,
+        1964093,
     ),
     (
         "irs_zip_income.csv",
         "https://www.irs.gov/pub/irs-soi/22zpallagi.csv",
         216173999,
-        None,
+        166131,
     ),
 ]
 
 
 def count_rows(path):
     """Return the number of data rows (header excluded) in a CSV file."""
+    lines = 0
     with open(path, "r", encoding="utf-8", errors="replace") as handle:
-        return max(sum(1 for _ in handle) - 1, 0)
+        for _ in handle:
+            lines += 1
+    return max(lines - 1, 0)
 
 
 def download(url, dest):
-    """Download ``url`` to ``dest`` unless the file already exists."""
+    """Download ``url`` to ``dest`` unless the file already exists.
+
+    The file is written under a ``.part`` name and renamed only once the
+    transfer completes, so an interrupted download is never mistaken for a
+    finished one on the next run.
+    """
     if os.path.exists(dest):
         print(f"  exists, skipping: {dest}")
         return
     print(f"  downloading: {dest}")
+    partial = dest + ".part"
     request = urllib.request.Request(url,
                                      headers={"User-Agent": "Mozilla/5.0"})
-    with (
-        urllib.request.urlopen(request, timeout=180) as response,
-        open(dest, "wb") as out,
-    ):
-        while True:
-            chunk = response.read(1 << 20)
-            if not chunk:
-                break
-            out.write(chunk)
+    with urllib.request.urlopen(request, timeout=180) as response:
+        with open(partial, "wb") as out:
+            while True:
+                chunk = response.read(1 << 20)
+                if not chunk:
+                    break
+                out.write(chunk)
+    os.replace(partial, dest)
 
 
 def verify(path, expected_bytes, expected_rows):
@@ -93,7 +103,8 @@ def main():
     if all(results):
         print("All sources match expectations.")
     else:
-        print("WARNING: at least one source changed; re-check the report.")
+        print(f"WARNING: at least one source changed since {SNAPSHOT_DATE};"
+              " report numbers will not reproduce exactly.")
         return 1
     return 0
 
